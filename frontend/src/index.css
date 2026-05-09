@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@layer base {
+  :root {
+    --background: 240 6% 7%;
+    --foreground: 0 0% 95%;
+
+    --card: 240 5% 11%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 240 5% 11%;
+    --popover-foreground: 0 0% 95%;
+
+    --primary: 270 60% 58%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 240 4% 16%;
+    --secondary-foreground: 0 0% 90%;
+
+    --muted: 240 4% 16%;
+    --muted-foreground: 240 5% 55%;
+
+    --accent: 0 65% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 240 4% 18%;
+    --input: 240 4% 18%;
+    --ring: 270 60% 58%;
+
+    --radius: 0.75rem;
+
+    --cinema-glow: 270 60% 58%;
+    --cinema-surface: 240 5% 13%;
+    --cinema-surface-hover: 240 5% 16%;
+    --cinema-red: 0 65% 55%;
+    --cinema-gradient-start: 270 60% 58%;
+    --cinema-gradient-end: 0 65% 55%;
+
+    --sidebar-background: 240 6% 7%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 270 60% 58%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 4% 16%;
+    --sidebar-accent-foreground: 0 0% 90%;
+    --sidebar-border: 240 4% 18%;
+    --sidebar-ring: 270 60% 58%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  .cinema-gradient {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--cinema-gradient-start)) 0%,
+      hsl(var(--cinema-gradient-end)) 100%
+    );
+  }
+
+  .cinema-gradient-text {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--cinema-gradient-start)) 0%,
+      hsl(var(--cinema-gradient-end)) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .cinema-glow {
+    box-shadow: 0 0 60px -12px hsl(var(--cinema-glow) / 0.3);
+  }
+
+  .cinema-glow-sm {
+    box-shadow: 0 0 30px -8px hsl(var(--cinema-glow) / 0.2);
+  }
+
+  .cinema-surface {
+    background-color: hsl(var(--cinema-surface));
+  }
+
+  .cinema-border {
+    border-color: hsl(var(--border));
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+}
