@@ -21,16 +21,9 @@ langchain-postgres        # PostgresChatMessageHistory
 psycopg[binary]           # Driver PostgreSQL v3
 
 # ============================================
-# BASE DE CONOCIMIENTO (RAG con Supabase)
+# BASE DE CONOCIMIENTO (RAG con Supabase pgvector)
 # ============================================
 supabase>=1.0.0           # Cliente de Supabase
-numpy                     # Cálculo de similitud coseno
-
-# ============================================
-# BASE DE CONOCIMIENTO (RAG con Pinecone)
-# ============================================
-langchain-pinecone        # Integración LangChain + Pinecone
-pinecone                  # Cliente Pinecone
 pypdf>=3.0.0              # Loader de PDFs (PyPDFLoader)
 
 # ============================================

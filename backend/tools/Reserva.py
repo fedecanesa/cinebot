@@ -166,3 +166,70 @@ def consultar_reserva(codigo: str) -> str:
 
     except Exception as e:
         return f"Error al consultar la reserva: {e}"
+
+
+@tool
+def cancelar_reserva(codigo: str) -> str:
+    """
+    Cancela una reserva existente y libera los asientos.
+
+    Usá esta herramienta SOLO cuando el usuario haya confirmado explícitamente que quiere cancelar.
+    Nunca canceles sin confirmación previa del usuario.
+
+    Args:
+        codigo: Código de reserva (ej: CIN-AB12CD)
+    """
+    print(f"   ❌ Cancelando reserva: {codigo}")
+
+    try:
+        with _get_conn() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    SELECT r.id, r.funcion_id, r.cantidad_entradas, r.tipo_entrada, r.estado,
+                           p.titulo, f.fecha, f.hora
+                    FROM reservas r
+                    JOIN funciones f ON r.funcion_id = f.id
+                    JOIN peliculas p ON f.pelicula_id = p.id
+                    WHERE UPPER(r.codigo) = UPPER(%s)
+                    """,
+                    (codigo.strip(),),
+                )
+                row = cur.fetchone()
+
+                if not row:
+                    return f"No se encontró ninguna reserva con el código {codigo.upper()}."
+
+                reserva_id, funcion_id, cantidad, tipo, estado, titulo, fecha, hora = row
+
+                if estado == "cancelada":
+                    return f"La reserva {codigo.upper()} ya estaba cancelada."
+                if estado == "usada":
+                    return f"La reserva {codigo.upper()} ya fue utilizada y no puede cancelarse."
+
+                campo_asientos = (
+                    "asientos_general_disponibles"
+                    if tipo == "general"
+                    else "asientos_premium_disponibles"
+                )
+
+                cur.execute(
+                    f"UPDATE funciones SET {campo_asientos} = {campo_asientos} + %s WHERE id = %s",
+                    (cantidad, funcion_id),
+                )
+                cur.execute(
+                    "UPDATE reservas SET estado = 'cancelada' WHERE id = %s",
+                    (reserva_id,),
+                )
+
+        hora_str = hora.strftime("%H:%M") if hasattr(hora, "strftime") else str(hora)[:5]
+        fecha_str = fecha.strftime("%d/%m/%Y") if hasattr(fecha, "strftime") else str(fecha)
+
+        return (
+            f"✅ Reserva {codigo.upper()} cancelada correctamente.\n"
+            f"Película: {titulo} — {fecha_str} a las {hora_str}\n"
+            f"Se liberaron {cantidad} asiento(s) {tipo}."
+        )
+
+    except Exception as e:
+        return f"Error al cancelar la reserva: {e}"

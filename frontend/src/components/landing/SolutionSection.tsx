@@ -2,22 +2,22 @@ import ScrollReveal from "./ScrollReveal";
 import { Clapperboard, Clock, MapPin, Sparkles } from "lucide-react";
 
 const cards = [
-  { icon: Clapperboard, title: "Ver cartelera", desc: "Películas disponibles hoy en tu zona" },
-  { icon: Clock, title: "Comparar horarios", desc: "Funciones lado a lado para que elijas rápido" },
-  { icon: MapPin, title: "Encontrar cines", desc: "Ubicaciones y salas con disponibilidad" },
-  { icon: Sparkles, title: "Recibir sugerencias", desc: "Recomendaciones según tus preferencias" },
+  { icon: Clapperboard, title: "Ver cartelera", desc: "Películas en cartelera respondidas al instante, sin navegar múltiples sitios" },
+  { icon: Clock, title: "Consultar horarios", desc: "Preguntá por funciones de cualquier película y obtené horarios al toque" },
+  { icon: MapPin, title: "Encontrar cines", desc: "Información sobre cines y salas para orientarte antes de salir" },
+  { icon: Sparkles, title: "Recibir sugerencias", desc: "Recomendaciones personalizadas según tu estado de ánimo y preferencias" },
 ];
 
 const SolutionSection = () => (
   <section className="py-24 lg:py-32 relative">
     <div className="container mx-auto px-4">
       <ScrollReveal>
-        <p className="text-sm font-medium text-primary uppercase tracking-wider mb-3 text-center">La solución</p>
+        <p className="text-sm font-medium text-primary uppercase tracking-wider mb-3 text-center">Qué podés hacer</p>
         <h2 className="text-3xl sm:text-4xl font-bold text-center text-balance mb-4">
-          Todo en una conversación
+          Todo en una sola conversación
         </h2>
         <p className="text-muted-foreground text-center max-w-lg mx-auto mb-16">
-          CineBot centraliza la búsqueda de películas en un chat simple e inteligente.
+          CineBot reemplaza la búsqueda en múltiples sitios con un chat simple que entiende lo que necesitás.
         </p>
       </ScrollReveal>
 

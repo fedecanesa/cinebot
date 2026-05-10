@@ -3,15 +3,15 @@ import { motion } from "framer-motion";
 import { MessageSquare, Film, Clock, MapPin } from "lucide-react";
 
 const chatMessages = [
-  { role: "user" as const, text: "¿Qué hay para ver hoy?" },
-  { role: "bot" as const, text: "Hoy podés ver: Dune 2, Kung Fu Panda 4, Godzilla x Kong" },
-  { role: "user" as const, text: "Quiero ver Dune 2" },
+  { role: "user" as const, text: "¿Qué me recomendás para esta noche?" },
+  { role: "bot" as const, text: "Esta noche podés ver: Avengers: Doomsday, Misión Imposible 8 y Minecraft: La Película" },
+  { role: "user" as const, text: "¿Cuánto dura Avengers: Doomsday?" },
 ];
 
 const movies = [
-  { title: "Dune 2", time: "18:30", cinema: "Cinemark" },
-  { title: "Kung Fu Panda 4", time: "16:00", cinema: "Hoyts" },
-  { title: "Godzilla x Kong", time: "20:15", cinema: "Cinépolis" },
+  { title: "Avengers: Doomsday", time: "20:00", cinema: "Cinemark" },
+  { title: "Misión Imposible 8", time: "18:15", cinema: "Hoyts" },
+  { title: "Minecraft: La Película", time: "15:45", cinema: "Cinépolis" },
 ];
 
 const HeroSection = () => (

@@ -2,9 +2,9 @@ import ScrollReveal from "./ScrollReveal";
 import { Pencil, Search, ThumbsUp } from "lucide-react";
 
 const steps = [
-  { icon: Pencil, num: "01", title: "Escribís lo que querés ver", desc: "Preguntá por películas, horarios o cines en lenguaje natural." },
-  { icon: Search, num: "02", title: "El bot busca opciones", desc: "CineBot analiza la cartelera y filtra las mejores alternativas." },
-  { icon: ThumbsUp, num: "03", title: "Recibís recomendaciones", desc: "Opciones claras y personalizadas para que decidas al instante." },
+  { icon: Pencil, num: "01", title: "Escribís lo que querés ver", desc: "Preguntá por películas, horarios o cines en lenguaje natural, como si le hablaras a alguien." },
+  { icon: Search, num: "02", title: "CineBot busca y procesa", desc: "Consulta su base de conocimiento y la web para encontrar la información más relevante para vos." },
+  { icon: ThumbsUp, num: "03", title: "Recibís una respuesta clara", desc: "Sin filtros, sin menús: una respuesta directa con las mejores opciones para que decidas rápido." },
 ];
 
 const HowItWorksSection = () => (

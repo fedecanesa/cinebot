@@ -5,6 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useChat } from "@/hooks/useChat";
 
+const SUGGESTIONS = [
+  "¿Qué hay en cartelera hoy?",
+  "¿Qué me recomendás para esta noche?",
+  "Quiero reservar entradas",
+  "Buscame algo de acción",
+];
+
 export default function Chat() {
   const navigate = useNavigate();
   const { messages, isLoading, sendMessage } = useChat();
@@ -29,6 +36,8 @@ export default function Chat() {
     }
   };
 
+  const showSuggestions = messages.length === 1 && !isLoading;
+
   return (
     <div className="flex flex-col h-screen bg-background">
       {/* Header */}
@@ -40,19 +49,11 @@ export default function Chat() {
           <Film className="h-5 w-5 text-primary" />
           <span className="font-bold">CineBot</span>
         </div>
+        <span className="ml-auto text-xs text-primary/70 font-medium">en línea</span>
       </header>
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4">
-        {messages.length === 0 && (
-          <div className="flex flex-col items-center justify-center h-full text-center gap-3 text-muted-foreground">
-            <Film className="h-10 w-10 text-primary/40" />
-            <p className="text-sm max-w-xs">
-              Preguntame sobre películas, horarios o hacé una reserva.
-            </p>
-          </div>
-        )}
-
         {messages.map((msg) => (
           <div
             key={msg.id}
@@ -61,7 +62,7 @@ export default function Chat() {
             <div
               className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm whitespace-pre-wrap leading-relaxed ${
                 msg.role === "user"
-                  ? "bg-primary text-primary-foreground rounded-br-sm"
+                  ? "cinema-gradient text-primary-foreground rounded-br-sm"
                   : "bg-card border border-border text-card-foreground rounded-bl-sm"
               }`}
             >
@@ -79,6 +80,21 @@ export default function Chat() {
                 <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground animate-bounce" />
               </div>
             </div>
+          </div>
+        )}
+
+        {/* Suggestion chips — only before first user message */}
+        {showSuggestions && (
+          <div className="flex flex-wrap gap-2 pt-2">
+            {SUGGESTIONS.map((s) => (
+              <button
+                key={s}
+                onClick={() => sendMessage(s)}
+                className="rounded-full border border-border bg-card px-4 py-2 text-sm text-foreground hover:border-primary/50 hover:bg-card/80 transition-colors"
+              >
+                {s}
+              </button>
+            ))}
           </div>
         )}
 

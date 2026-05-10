@@ -2,20 +2,25 @@ import ScrollReveal from "./ScrollReveal";
 import { MessageSquare } from "lucide-react";
 
 const cases = [
-  "Quiero ver una peli hoy",
-  "¿Qué hay en cartelera?",
-  "¿Dónde pasan Dune 2?",
-  "¿Qué me recomendás para esta noche?",
+  "¿Qué me recomendás si me gustó Interstellar?",
+  "Quiero algo de acción que no dure más de 2 horas",
+  "¿Hay algo para ver en familia este fin de semana?",
+  "Buscame una peli de terror pero no muy gore",
+  "¿Qué funciones hay esta noche en Hoyts?",
+  "¿Cuánto dura Avengers: Doomsday?",
 ];
 
 const UseCasesSection = () => (
   <section className="py-24 lg:py-32">
     <div className="container mx-auto px-4">
       <ScrollReveal>
-        <p className="text-sm font-medium text-primary uppercase tracking-wider mb-3 text-center">Casos de uso</p>
-        <h2 className="text-3xl sm:text-4xl font-bold text-center text-balance mb-12">
-          Preguntale lo que quieras
+        <p className="text-sm font-medium text-primary uppercase tracking-wider mb-3 text-center">Ejemplos reales</p>
+        <h2 className="text-3xl sm:text-4xl font-bold text-center text-balance mb-4">
+          Preguntale como se te ocurra
         </h2>
+        <p className="text-muted-foreground text-center max-w-md mx-auto mb-12">
+          No hace falta usar palabras clave. CineBot entiende lenguaje natural.
+        </p>
       </ScrollReveal>
 
       <div className="flex flex-wrap justify-center gap-3 max-w-2xl mx-auto">

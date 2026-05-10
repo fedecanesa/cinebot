@@ -10,10 +10,10 @@ const CTASection = () => (
       <ScrollReveal>
         <div className="text-center max-w-xl mx-auto">
           <h2 className="text-3xl sm:text-4xl font-bold text-balance mb-4">
-            Probá <span className="cinema-gradient-text">CineBot</span> ahora
+            ¿Qué vas a ver este fin de semana?
           </h2>
           <p className="text-muted-foreground mb-8">
-            Descubrí lo fácil que es encontrar tu próxima película.
+            Abrí el chat y en segundos tenés opciones claras. Sin buscar en múltiples sitios.
           </p>
           <Button variant="hero" size="xl" asChild>
             <Link to="/chat">

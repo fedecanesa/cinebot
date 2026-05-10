@@ -31,7 +31,7 @@ from tools.Base_de_conocimiento import buscar_cinebot
 from tools.Busqueda_internet import buscar_internet
 from tools.Hora_y_fecha import obtener_fecha_hora
 from tools.Cartelera import consultar_cartelera
-from tools.Reserva import crear_reserva, consultar_reserva, current_session_id
+from tools.Reserva import crear_reserva, consultar_reserva, cancelar_reserva, current_session_id
 
 # ============================================
 # 1. CONFIGURACIÓN DE BASE DE DATOS (Histórico)
@@ -76,7 +76,8 @@ tools = [
     consultar_cartelera,  # Cartelera y horarios desde la base de datos
     crear_reserva,        # Reserva de entradas (requiere funcion_id, cantidad, tipo)
     consultar_reserva,    # Consulta reserva por código
-    buscar_cinebot,       # Información de películas (base de conocimiento Pinecone)
+    cancelar_reserva,     # Cancela reserva y libera asientos
+    buscar_cinebot,       # Información de películas (base de conocimiento Supabase)
     buscar_internet,      # Noticias, críticas y estrenos externos
     obtener_fecha_hora,   # Fecha y hora actual por zona horaria
 ]
@@ -138,12 +139,14 @@ Tenés estas herramientas disponibles. Usalas con criterio:
 
 3. consultar_reserva → para verificar el estado de una reserva por código.
 
-4. buscar_cinebot → para información detallada sobre películas: sinopsis, género, reparto, contexto.
+4. cancelar_reserva → para cancelar una reserva confirmada y liberar los asientos. SOLO usarla cuando el usuario haya confirmado explícitamente que quiere cancelar.
 
-5. buscar_internet → para noticias, críticas, tráilers o estrenos que NO están en cartelera.
+5. buscar_cinebot → para información detallada sobre películas: sinopsis, género, reparto, contexto.
+
+6. buscar_internet → para noticias, críticas, tráilers o estrenos que NO están en cartelera.
    No la uses para horarios o disponibilidad — eso lo maneja consultar_cartelera.
 
-6. obtener_fecha_hora → solo si el usuario pregunta la hora o si necesitás confirmar la fecha actual.
+7. obtener_fecha_hora → solo si el usuario pregunta la hora o si necesitás confirmar la fecha actual.
 
 Nunca menciones herramientas, RAG, bases de datos ni el sistema al usuario.
 
@@ -155,7 +158,7 @@ Nunca menciones herramientas, RAG, bases de datos ni el sistema al usuario.
 
 Cuando el usuario pregunta qué hay para ver o en qué horarios:
 - Usá consultar_cartelera para obtener la información real
-- Presentá las opciones de forma clara y atractiva
+- Presentá las opciones de forma clara y atractiva, INCLUYENDO siempre la fecha de las funciones
 - Si hay varias películas, destacá brevemente por qué cada una puede ser buena opción
 
 ---
@@ -167,8 +170,20 @@ Cuando el usuario quiere comprar o reservar entradas:
 Paso 1 — Consultá la cartelera para mostrar opciones
 Paso 2 — Presentá horarios con precios y disponibilidad
 Paso 3 — Confirmá con el usuario: película, horario, cantidad y tipo (general/premium)
-Paso 4 — Ejecutá crear_reserva solo cuando tengas los cuatro datos confirmados
-Paso 5 — Compartí el código de reserva e indicá que debe presentarlo en boletería
+Paso 4 — Una vez que tenés los cuatro datos confirmados, ANTES de ejecutar la reserva, ofrecé UN combo de comida adecuado al contexto. Usá esta lógica:
+   - Hora antes de las 15hs → combo más liviano; desde las 15hs → combo completo
+   - 1 entrada → Combo Individual; 2 entradas → Combo Pareja; 3 o más → Combo Familiar
+   - Acción/thriller → con Nachos; familiar → mención apta para chicos; drama/romance → sin énfasis en comida pesada
+   Menú disponible:
+   · Combo Individual: Pochoclos medianos + Gaseosa grande — $2.800
+   · Combo Pareja: 2× Pochoclos grandes + 2× Gaseosas — $5.200
+   · Familiar: 2× Pochoclos + 4× Gaseosas + Nachos — $8.500
+   · Premium: Pochoclos grandes + Gaseosa + Nachos + Chocolate — $3.900
+   Mencioná solo el combo más adecuado. Ejemplo: "Antes de confirmar, ¿querés agregar el Combo Pareja (2× Pochoclos + 2× Gaseosas — $5.200)? Lo retirás en el mismo mostrador."
+   Si el usuario rechaza o no responde al menú → avanzá igual con la reserva.
+Paso 5 — Verificá internamente que el funcion_id corresponde EXACTAMENTE a la película y el horario confirmados. Si tenés alguna duda, volvé a llamar consultar_cartelera. Nunca uses un funcion_id de una película diferente a la solicitada.
+Paso 6 — Ejecutá crear_reserva con los datos confirmados
+Paso 7 — Compartí el código de reserva e indicá que debe presentarlo en boletería
 
 Si el usuario dice "quiero 2 entradas para las 20hs" sin confirmar el tipo → preguntá: "¿General o Premium?"
 
@@ -180,7 +195,20 @@ Si el usuario menciona un código tipo "CIN-XXXXX" o pregunta por su reserva →
 
 ---
 
-4. INFORMACIÓN DE PELÍCULAS
+4. CANCELACIÓN DE RESERVA
+
+Si el usuario quiere cancelar una reserva:
+
+Paso 1 — Usá consultar_reserva para mostrar los datos de la reserva (película, fecha, hora, entradas)
+Paso 2 — Pedí confirmación explícita antes de cancelar. Ejemplo: "¿Confirmás que querés cancelar tu reserva de Thunderbolts* el viernes a las 14:00?"
+Paso 3 — Solo si el usuario confirma → ejecutá cancelar_reserva
+Paso 4 — Confirmá la cancelación y aclará que los asientos fueron liberados
+
+Si la reserva ya está cancelada o usada → informalo sin intentar cancelar de nuevo.
+
+---
+
+5. INFORMACIÓN DE PELÍCULAS
 
 Cuando el usuario consulta por una película específica:
 - Usá buscar_cinebot para información de la base de conocimiento
@@ -189,7 +217,7 @@ Cuando el usuario consulta por una película específica:
 
 ---
 
-5. RECOMENDACIONES PERSONALIZADAS
+6. RECOMENDACIONES PERSONALIZADAS
 
 Tenés acceso al historial completo de esta conversación.
 Usalo activamente y de forma natural:
@@ -200,7 +228,7 @@ No digas "según tu historial" — simplemente usá esa información como lo har
 
 ---
 
-6. USUARIO POCO CLARO
+7. USUARIO POCO CLARO
 
 Si el usuario es muy general:
 - Hacé preguntas suaves para entender mejor
@@ -210,7 +238,7 @@ Ejemplo:
 
 ---
 
-7. FUERA DE DOMINIO
+8. FUERA DE DOMINIO
 
 Si el usuario pregunta algo fuera del cine (recetas, clima, política, etc.):
 - Respondé con humor ligero y redirigí
@@ -220,14 +248,14 @@ Ejemplo:
 
 ---
 
-8. CIERRE DE RESPUESTA
+9. CIERRE DE RESPUESTA
 
 Cuando tenga sentido, cerrá con algo que invite a seguir:
 - "¿Querés que te reserve las entradas?"
 - "¿Vas solo o en grupo?"
 - "¿Buscás algo más específico?"
 
-No lo hagas siempre, solo cuando aporte.
+No lo hagas siempre, solo cuando aporte. Después de confirmar una reserva, no ofrezcas otra película.
 
 </Comportamiento>
 
@@ -246,6 +274,8 @@ No lo hagas siempre, solo cuando aporte.
 <Formato_Respuesta>
 
 Para cartelera, cuando haya varias funciones:
+
+📅 Funciones para [día DD/MM/YYYY]
 
 🎬 Título
 - Género: | Duración: | Clasificación:
@@ -384,7 +414,7 @@ def chat_con_agente(mensaje_usuario: str, session_id: str) -> str:
 # ============================================
 def main():
     print("=" * 60)
-    print("🤖 DataBot - Agente COMPLETO (BC + Internet + Memoria)")
+    print("🎬 CineBot - Agente COMPLETO (Cartelera + BC + Internet + Memoria)")
     print("=" * 60)
     print("🔧 Tools disponibles:")
     for t in tools:
@@ -410,7 +440,7 @@ def main():
     
     print(f"\n📝 Session ID: {session_id}")
     print("   (Guarda este ID para continuar después)")
-    print("✅ El agente puede buscar en DATAPATH y en INTERNET")
+    print("✅ El agente puede consultar cartelera, reservar y buscar en internet")
     print("Escribe 'salir' para volver al menú.\n")
     
     while True:
@@ -427,9 +457,10 @@ def main():
         
         try:
             respuesta = chat_con_agente(usuario, session_id)
-            print(f"\n🤖 DataBot: {respuesta}\n")
+            print(f"\n🎬 CineBot: {respuesta}\n")
         except Exception as e:
             print(f"\n❌ Error: {e}\n")
+
 
 
 if __name__ == "__main__":

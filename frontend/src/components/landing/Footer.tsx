@@ -7,9 +7,14 @@ const Footer = () => (
         <Film className="h-5 w-5 text-primary" />
         <span className="font-semibold">CineBot</span>
       </div>
-      <p className="text-sm text-muted-foreground text-center">
-        Proyecto de IA conversacional · Canezza Studios
-      </p>
+      <div className="text-center space-y-1">
+        <p className="text-sm text-muted-foreground">
+          Proyecto de IA conversacional · Canezza Studios
+        </p>
+        <p className="text-xs text-muted-foreground/50">
+          CineBot informa y recomienda. No reserva asientos ni vende entradas.
+        </p>
+      </div>
     </div>
   </footer>
 );

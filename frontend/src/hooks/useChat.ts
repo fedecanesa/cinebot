@@ -17,8 +17,14 @@ function getOrCreateSessionId(): string {
   return id;
 }
 
+const GREETING: Message = {
+  id: "greeting",
+  role: "assistant",
+  content: "¡Hola! Soy CineBot. Preguntame sobre películas, horarios o reservá tus entradas.",
+};
+
 export function useChat() {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>([GREETING]);
   const [isLoading, setIsLoading] = useState(false);
   const sessionId = getOrCreateSessionId();
 
